@@ -101,7 +101,7 @@ App-MatrizDeFocoFisico/
 **Pré-requisitos:** [Git](https://git-scm.com) e [Android Studio](https://developer.android.com/studio).
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/AppLab-Mobile-UFRN-2026-1/App-MatrizDeFocoFisico.git
 ```
 
 1. Abra o Android Studio e selecione **Open**, apontando para a pasta clonada.
@@ -120,6 +120,20 @@ git clone <url-do-repositorio>
         <img src="https://avatars.githubusercontent.com/MarcusAurelius33" width="100px;" alt="Marcus Aurelius"/>
         <br>
         <sub><b>Marcus Aurelius</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/leonardonadson">
+        <img src="https://avatars.githubusercontent.com/leonardonadson" width="100px;" alt="Leonardo Nadson"/>
+        <br>
+        <sub><b>Leonardo Nadson</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/luan-sampaio">
+        <img src="https://avatars.githubusercontent.com/luan-sampaio" width="100px;" alt="Luan Sampaio"/>
+        <br>
+        <sub><b>Luan Sampaio</b></sub>
       </a>
     </td>
   </tr>
