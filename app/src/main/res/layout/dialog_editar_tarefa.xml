@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Cabeçalho com ícone de lápis e título -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:text="✎"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_delete_zone"
+            android:backgroundTint="#FF5252"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Editar tarefa"
+            android:textColor="#1C1C1C"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Campo de texto -->
+    <EditText
+        android:id="@+id/dialog_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_dialog_input"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:textColor="#212121"
+        android:textColorHint="#9E9E9E"
+        android:textSize="15sp"
+        android:inputType="textCapSentences|textMultiLine"
+        android:maxLines="4"
+        android:minLines="2"
+        android:gravity="top|start" />
+
+    <!-- Botões -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/dialog_btn_cancelar"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Cancelar"
+            android:textColor="#757575"
+            android:textSize="14sp"
+            android:letterSpacing="0"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/dialog_btn_salvar"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:text="Salvar"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#FF5252"
+            android:textSize="14sp"
+            android:letterSpacing="0"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+</LinearLayout>
