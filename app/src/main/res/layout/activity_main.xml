@@ -25,27 +25,16 @@
                 android:layout_weight="1"
                 android:background="#FFCDD2">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Fazer Agora"
-                        android:textColor="#37474F"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Urgente + Importante"
-                        android:textColor="#546E7A"
-                        android:textSize="10sp" />
-                </LinearLayout>
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="Fazer Agora"
+                    android:textColor="#37474F"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
             </FrameLayout>
 
             <View
@@ -60,27 +49,16 @@
                 android:layout_weight="1"
                 android:background="#C8E6C9">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Agendar"
-                        android:textColor="#37474F"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Importante + Não Urgente"
-                        android:textColor="#546E7A"
-                        android:textSize="10sp" />
-                </LinearLayout>
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="Agendar"
+                    android:textColor="#37474F"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
             </FrameLayout>
         </LinearLayout>
 
@@ -103,27 +81,16 @@
                 android:layout_weight="1"
                 android:background="#FFF9C4">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Delegar"
-                        android:textColor="#37474F"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Urgente + Não Importante"
-                        android:textColor="#546E7A"
-                        android:textSize="10sp" />
-                </LinearLayout>
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="Delegar"
+                    android:textColor="#37474F"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
             </FrameLayout>
 
             <View
@@ -138,27 +105,16 @@
                 android:layout_weight="1"
                 android:background="#BBDEFB">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Eliminar"
-                        android:textColor="#37474F"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Não Urgente + Não Importante"
-                        android:textColor="#546E7A"
-                        android:textSize="10sp" />
-                </LinearLayout>
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="Descartar/Avaliar"
+                    android:textColor="#37474F"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>
@@ -168,6 +124,22 @@
         android:id="@+id/bubble_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <!-- Zona de exclusão (aparece durante o arraste) -->
+    <TextView
+        android:id="@+id/delete_zone"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="✕"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:background="@drawable/bg_delete_zone"
+        android:elevation="12dp"
+        android:visibility="gone" />
 
     <!-- Barra de input flutuante -->
     <LinearLayout
