@@ -56,6 +56,14 @@ class MainActivity : AppCompatActivity() {
         val statusBarHeight = if (statusBarResId > 0) resources.getDimensionPixelSize(statusBarResId) else 0
         findViewById<LinearLayout>(R.id.quadrant_grid).setPadding(0, statusBarHeight, 0, 0)
 
+        // Empurra o input bar acima da barra de navegação do dispositivo
+        val navBarResId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        val navBarHeight = if (navBarResId > 0) resources.getDimensionPixelSize(navBarResId) else 0
+        val inputBar = findViewById<LinearLayout>(R.id.input_bar)
+        val params = inputBar.layoutParams as android.widget.FrameLayout.LayoutParams
+        params.bottomMargin = (20 * resources.displayMetrics.density).toInt() + navBarHeight
+        inputBar.layoutParams = params
+
         configurarInput()
 
         // Aguarda o layout ser medido antes de posicionar as bolhas
