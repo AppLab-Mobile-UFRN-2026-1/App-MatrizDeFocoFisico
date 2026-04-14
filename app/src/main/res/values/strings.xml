@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Matriz de Foco Físico</string>
+    <string name="quadrant_fazer_agora">Fazer Agora</string>
+    <string name="quadrant_agendar">Agendar</string>
+    <string name="quadrant_delegar">Delegar</string>
+    <string name="quadrant_eliminar">Eliminar</string>
+    <string name="input_placeholder">Nova tarefa…</string>
+    <string name="hint_drag">Arraste para um quadrante</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorFazerAgora">#FFCDD2</color>
+    <color name="colorAgendar">#C8E6C9</color>
+    <color name="colorDelegar">#FFF9C4</color>
+    <color name="colorEliminar">#BBDEFB</color>
+
+    <color name="colorBubbleFazerAgora">#FF5252</color>
+    <color name="colorBubbleAgendar">#43A047</color>
+    <color name="colorBubbleDelegar">#FFB300</color>
+    <color name="colorBubbleEliminar">#1E88E5</color>
+</resources>
