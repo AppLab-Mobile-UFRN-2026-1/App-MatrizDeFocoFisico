@@ -1,109 +1,125 @@
-# 🎯 Matriz de Foco Físico
+# Matriz de Foco Físico
 
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white)
 
-Um aplicativo Android nativo que transforma a Matriz de Eisenhower em uma experiência física e gestual. Tarefas viram bolhas que o usuário arrasta e solta nos quadrantes — ao pousar, cada bolha quica com animação de mola.
+Um aplicativo Android nativo que transforma a Matriz de Eisenhower em uma experiência gestual. Tarefas viram bolhas que o usuário arrasta e solta nos quadrantes — ao pousar, cada bolha quica com animação de mola.
 
-## 📸 Demonstração
+## Demonstração
 
 > *(vídeo será adicionado após a gravação)*
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
-### 🎨 Design e Interface (UI/UX)
-* **Grade de Quadrantes Colorida:** Tela dividida em quatro áreas com cores pastel distintas — vermelho (Fazer Agora), verde (Agendar), âmbar (Delegar) e azul (Eliminar).
-* **Sem Listas de Texto:** A interação é 100% gestual; não há tabelas, checkboxes ou listas tradicionais.
-* **Bolhas Físicas:** Cada tarefa é representada por uma bolha circular colorida que pode ser arrastada livremente pela tela.
-* **Input Flutuante:** Barra de criação de tarefas com design arredondado, flutuando na parte inferior da tela.
+### Interface
 
-### ⚙️ Lógica e Regras de Negócio
-* **Criação de Tarefas:** O usuário digita a tarefa no campo inferior e pressiona Enter ou o botão "+" — a bolha aparece no centro do quadrante padrão.
-* **Arrastar e Soltar (Pan Gesture):** Bolhas são movidas com `detectDragGestures`; o dedo segue o toque em tempo real sem travamentos.
-* **Animação de Mola ao Soltar:** Ao liberar a bolha, ela identifica o quadrante alvo e anima até o centro com `Spring.DampingRatioMediumBouncy` — efeito de quique real.
-* **Remoção por Toque Longo:** Segurar a bolha por um instante a remove da tela e da memória.
-* **Persistência Local:** Todas as tarefas e seus quadrantes são salvos em `SharedPreferences` via Gson — sobrevivem ao fechamento do app.
+- **Grade de quadrantes:** tela dividida em quatro áreas com cores pastel — vermelho (Fazer Agora), verde (Agendar), âmbar (Delegar) e azul (Descartar/Avaliar).
+- **Bolhas arrastáveis:** cada tarefa é representada por uma bolha quadrada colorida, posicionada automaticamente em uma grade de slots dentro do seu quadrante.
+- **Animação de mola:** ao soltar uma bolha, ela anima até o slot correto com física de mola (`DampingRatioMediumBouncy`). Quando uma tarefa muda de quadrante, as demais se reorganizam com a mesma animação.
+- **Input flutuante:** barra de criação de tarefas com design arredondado na parte inferior da tela, que sobe automaticamente ao abrir o teclado.
+
+### Criação de tarefas
+
+- Digite a tarefa no campo inferior e pressione Enter ou o botão "+".
+- A nova tarefa vai para o primeiro quadrante que tiver espaço disponível, na ordem: **Fazer Agora → Agendar → Delegar → Descartar/Avaliar**.
+- Se todos os quadrantes estiverem cheios, um aviso customizado é exibido.
+
+### Edição
+
+- **Toque simples** na bolha abre um dialog estilizado com o texto atual para edição.
+- **Arrastar** move a bolha entre quadrantes.
+
+### Exclusão
+
+- **Arrastar até a zona de exclusão** (botão vermelho "✕" que aparece centralizado durante o arraste) remove a tarefa.
+- A zona de exclusão dá feedback visual ao passar por cima: cresce e fica totalmente opaca.
+
+### Limites por quadrante
+
+| Quadrante | Máx. de tarefas | Grade |
+|---|---|---|
+| Fazer Agora | 8 | 2 colunas × 4 linhas |
+| Agendar | 8 | 2 colunas × 4 linhas |
+| Delegar | 6 | 2 colunas × 3 linhas |
+| Descartar/Avaliar | 6 | 2 colunas × 3 linhas |
+
+### Persistência
+
+- Tarefas e seus quadrantes são salvos em `SharedPreferences` via Gson — sobrevivem ao fechamento do app.
+- Estado da sessão (posições após rotação de tela) é preservado via `onSaveInstanceState`.
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
-```text
+```
 App-MatrizDeFocoFisico/
-└── app/
-    └── src/main/
-        ├── java/com/ufrn/matrizdefocofsico/
-        │   ├── MainActivity.kt              # Ponto de entrada, configura Compose
-        │   ├── data/
-        │   │   ├── Quadrant.kt              # Enum dos 4 quadrantes com cores e rótulos
-        │   │   ├── Task.kt                  # Modelo de dados da tarefa
-        │   │   └── TaskRepository.kt        # Leitura e escrita no SharedPreferences
-        │   ├── viewmodel/
-        │   │   └── MatrixViewModel.kt       # Estado global da lista de tarefas
-        │   └── ui/
-        │       ├── MatrixScreen.kt          # Tela principal: grade + input flutuante
-        │       ├── TaskBubble.kt            # Bolha arrastável com animação de mola
-        │       └── theme/
-        │           ├── Color.kt             # Paleta de cores dos quadrantes
-        │           ├── Theme.kt             # Tema MaterialTheme do app
-        │           └── Type.kt              # Tipografia
-        ├── res/values/
-        │   ├── strings.xml
-        │   └── themes.xml
-        └── AndroidManifest.xml
+└── app/src/main/
+    ├── java/com/ufrn/matrizdefocofsico/
+    │   ├── MainActivity.kt          # Toda a lógica de UI, gestos e animações
+    │   └── data/
+    │       ├── Quadrant.kt          # Enum dos 4 quadrantes com cores e rótulos
+    │       ├── Task.kt              # Modelo de dados da tarefa (id, text, quadrant)
+    │       └── TaskRepository.kt    # Leitura e escrita no SharedPreferences
+    └── res/
+        ├── layout/
+        │   ├── activity_main.xml        # Grade de quadrantes, overlay de bolhas, input bar
+        │   ├── item_bubble.xml          # Layout de cada bolha (TextView 80×80dp)
+        │   └── dialog_editar_tarefa.xml # Dialog customizado de edição
+        ├── drawable/
+        │   ├── bg_bubble.xml            # Fundo retangular com cantos arredondados
+        │   ├── bg_delete_zone.xml       # Fundo circular da zona de exclusão
+        │   ├── bg_input_bar.xml         # Pílula arredondada da barra de input
+        │   ├── bg_dialog.xml            # Fundo do dialog de edição
+        │   └── bg_dialog_input.xml      # Fundo do campo de texto do dialog
+        └── values/
+            ├── themes.xml               # Theme.AppCompat.NoActionBar
+            └── colors.xml
 ```
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
-* **Linguagem:** Kotlin
-* **UI:** Jetpack Compose
-* **SDK:** API 35 (Min: 24)
-* **Persistência:** SharedPreferences + Gson
-* **Animações:** `Animatable` com `spring()` (DampingRatioMediumBouncy)
-* **Gestos:** `detectDragGestures` + `detectTapGestures`
-* **Arquitetura:** ViewModel + State hoisting
-* **IDE:** Android Studio
+## Tecnologias
+
+| Categoria | Tecnologia |
+|---|---|
+| Linguagem | Kotlin |
+| UI | XML Layouts + AppCompatActivity |
+| SDK | API 35 (mín. 24) |
+| Persistência | SharedPreferences + Gson |
+| Animações | `androidx.dynamicanimation` (SpringAnimation) |
+| Gestos | `setOnTouchListener` (ACTION_DOWN / MOVE / UP) |
+| Teclado | `WindowCompat` + `ViewCompat.setOnApplyWindowInsetsListener` |
+| IDE | Android Studio |
 
 ---
 
-## 💻 Pré-requisitos
+## Como executar
 
-Antes de começar, você vai precisar ter instalado em sua máquina:
-* [Git](https://git-scm.com) para clonar o repositório.
-* [Android Studio](https://developer.android.com/studio) para rodar e editar o código.
+**Pré-requisitos:** [Git](https://git-scm.com) e [Android Studio](https://developer.android.com/studio).
 
-## 🚀 Como executar o projeto
+```bash
+git clone <url-do-repositorio>
+```
 
-1. Abra o seu terminal e faça o clone deste repositório:
-   ```bash
-   git clone <url-do-repositorio>
-   ```
-2. Abra o Android Studio.
-
-3. Na tela inicial, clique em **Open** e selecione a pasta do projeto que você acabou de clonar.
-
-4. Aguarde o Gradle sincronizar todas as dependências.
-
-5. Conecte o seu celular Android via cabo USB ou inicie um Emulador pelo **Device Manager**.
-
-6. Clique no botão verde de **Run** (▶️) na barra superior ou pressione **Shift + F10** para rodar o aplicativo!
+1. Abra o Android Studio e selecione **Open**, apontando para a pasta clonada.
+2. Aguarde o Gradle sincronizar as dependências.
+3. Conecte um dispositivo Android via USB ou inicie um emulador pelo **Device Manager**.
+4. Clique em **Run** (▶) ou pressione **Shift + F10**.
 
 ---
 
-## 👥 Equipe de Desenvolvimento
+## Equipe
 
 <table>
   <tr>
     <td align="center">
       <a href="https://github.com/MarcusAurelius33">
-        <img src="https://avatars.githubusercontent.com/MarcusAurelius33" width="100px;" alt="Foto de Marcus Aurelius no GitHub"/>
+        <img src="https://avatars.githubusercontent.com/MarcusAurelius33" width="100px;" alt="Marcus Aurelius"/>
         <br>
-        <sub>
-          <b>Marcus Aurelius</b>
-        </sub>
+        <sub><b>Marcus Aurelius</b></sub>
       </a>
     </td>
   </tr>
