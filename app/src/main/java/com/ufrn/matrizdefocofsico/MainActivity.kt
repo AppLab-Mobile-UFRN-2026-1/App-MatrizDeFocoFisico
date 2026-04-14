@@ -9,8 +9,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
@@ -49,6 +52,14 @@ class MainActivity : AppCompatActivity() {
         quadrantViews[Quadrant.AGENDAR]     = findViewById(R.id.quadrant_agendar)
         quadrantViews[Quadrant.DELEGAR]     = findViewById(R.id.quadrant_delegar)
         quadrantViews[Quadrant.ELIMINAR]    = findViewById(R.id.quadrant_eliminar)
+
+        // Empurra o grid para baixo da status bar sem afetar o container de bolhas
+        val quadrantGrid = findViewById<LinearLayout>(R.id.quadrant_grid)
+        ViewCompat.setOnApplyWindowInsetsListener(quadrantGrid) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(0, systemBars.top, 0, 0)
+            insets
+        }
 
         configurarInput()
 

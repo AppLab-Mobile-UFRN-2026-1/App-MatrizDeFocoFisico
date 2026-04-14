@@ -6,6 +6,7 @@
 
     <!-- Grade de quadrantes (fundo) -->
     <LinearLayout
+        android:id="@+id/quadrant_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -34,7 +35,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fazer Agora"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#37474F"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -42,7 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Urgente + Importante"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#546E7A"
                         android:textSize="10sp" />
                 </LinearLayout>
             </FrameLayout>
@@ -69,7 +70,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Agendar"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#37474F"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -77,7 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Importante + Não Urgente"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#546E7A"
                         android:textSize="10sp" />
                 </LinearLayout>
             </FrameLayout>
@@ -112,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Delegar"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#37474F"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -120,7 +121,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Urgente + Não Importante"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#546E7A"
                         android:textSize="10sp" />
                 </LinearLayout>
             </FrameLayout>
@@ -147,7 +148,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Eliminar"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#37474F"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -155,7 +156,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Não Urgente + Não Importante"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#546E7A"
                         android:textSize="10sp" />
                 </LinearLayout>
             </FrameLayout>
