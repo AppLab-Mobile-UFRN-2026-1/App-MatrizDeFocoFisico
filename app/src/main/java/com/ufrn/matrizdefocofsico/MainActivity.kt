@@ -12,8 +12,6 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
@@ -54,12 +52,9 @@ class MainActivity : AppCompatActivity() {
         quadrantViews[Quadrant.ELIMINAR]    = findViewById(R.id.quadrant_eliminar)
 
         // Empurra o grid para baixo da status bar sem afetar o container de bolhas
-        val quadrantGrid = findViewById<LinearLayout>(R.id.quadrant_grid)
-        ViewCompat.setOnApplyWindowInsetsListener(quadrantGrid) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(0, systemBars.top, 0, 0)
-            insets
-        }
+        val statusBarResId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        val statusBarHeight = if (statusBarResId > 0) resources.getDimensionPixelSize(statusBarResId) else 0
+        findViewById<LinearLayout>(R.id.quadrant_grid).setPadding(0, statusBarHeight, 0, 0)
 
         configurarInput()
 

@@ -188,14 +188,17 @@
         <EditText
             android:id="@+id/edit_task"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@null"
             android:hint="Nova tarefa…"
-            android:inputType="text"
+            android:textColorHint="#9E9E9E"
+            android:textColor="#212121"
+            android:inputType="textCapSentences"
             android:imeOptions="actionDone"
             android:maxLines="1"
-            android:textSize="14sp" />
+            android:textSize="15sp"
+            android:paddingStart="4dp" />
 
         <Button
             android:id="@+id/btn_add"
