@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private var statusBarHeight = 0
     private val quadrantViews = mutableMapOf<Quadrant, View>()
     private val gson = Gson()
+    private var landscapeKeyboardAberto = false
 
     // ─── Tamanho da bolha e grade — adapta conforme orientação ───────────────
     private val isLandscape: Boolean
@@ -105,7 +106,6 @@ class MainActivity : AppCompatActivity() {
             inputBar.visibility = View.GONE
             btnAddFab.visibility = View.VISIBLE
             aplicarMargemFab()
-            aplicarMargemTopInputBar()
         } else {
             inputBar.visibility = View.VISIBLE
             btnAddFab.visibility = View.GONE
@@ -117,15 +117,31 @@ class MainActivity : AppCompatActivity() {
 
         val root = findViewById<View>(R.id.root)
 
-        // Reposiciona o input bar quando o teclado abre/fecha (API moderna, funciona no Android 11+)
+        // Reposiciona as barras quando o teclado abre/fecha
         ViewCompat.setOnApplyWindowInsetsListener(root) { _, insets ->
+            val d = resources.displayMetrics.density
             val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+
             if (inputBar.visibility == View.VISIBLE) {
                 aplicarMargemInputBar(if (imeHeight > 0) imeHeight else 0)
             }
-            // Fecha a barra landscape automaticamente quando o teclado é dispensado
-            if (topInputBar.visibility == View.VISIBLE && imeHeight == 0) {
-                fecharBarraLandscape()
+
+            if (topInputBar.visibility == View.VISIBLE) {
+                // Margens dinâmicas: compensam o painel de nav nos lados em landscape
+                val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val params = topInputBar.layoutParams as FrameLayout.LayoutParams
+                params.marginStart = sysBars.left + (8 * d).toInt()
+                params.marginEnd   = sysBars.right + (16 * d).toInt()
+                params.bottomMargin = if (imeHeight > 0) imeHeight + (8 * d).toInt()
+                                      else (8 * d).toInt()
+                topInputBar.layoutParams = params
+
+                // Fecha automaticamente quando o teclado fecha após ter estado aberto
+                if (imeHeight > 0) landscapeKeyboardAberto = true
+                else if (landscapeKeyboardAberto) {
+                    landscapeKeyboardAberto = false
+                    fecharBarraLandscape()
+                }
             }
             insets
         }
@@ -161,18 +177,15 @@ class MainActivity : AppCompatActivity() {
         btnAddFab.layoutParams = params
     }
 
-    private fun aplicarMargemTopInputBar() {
-        val d = resources.displayMetrics.density
-        val params = topInputBar.layoutParams as FrameLayout.LayoutParams
-        params.topMargin = statusBarHeight + (8 * d).toInt()
-        topInputBar.layoutParams = params
-    }
-
     private fun abrirBarraLandscape() {
+        landscapeKeyboardAberto = false
         topInputBar.visibility = View.VISIBLE
-        editTaskLand.requestFocus()
-        val imm = getSystemService(InputMethodManager::class.java)
-        imm.showSoftInput(editTaskLand, InputMethodManager.SHOW_IMPLICIT)
+        // post garante que o layout foi concluído antes de pedir foco e abrir o teclado
+        editTaskLand.post {
+            editTaskLand.requestFocus()
+            getSystemService(InputMethodManager::class.java)
+                .showSoftInput(editTaskLand, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 
     private fun confirmarTarefaLandscape() {
@@ -184,10 +197,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fecharBarraLandscape() {
+        landscapeKeyboardAberto = false
         topInputBar.visibility = View.GONE
         editTaskLand.text.clear()
-        val imm = getSystemService(InputMethodManager::class.java)
-        imm.hideSoftInputFromWindow(editTaskLand.windowToken, 0)
+        editTaskLand.clearFocus()
+        getSystemService(InputMethodManager::class.java)
+            .hideSoftInputFromWindow(editTaskLand.windowToken, 0)
+    }
+
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun onBackPressed() {
+        if (topInputBar.visibility == View.VISIBLE) {
+            fecharBarraLandscape()
+        } else {
+            super.onBackPressed()
+        }
     }
 
     // ─── Input ────────────────────────────────────────────────────────────────
@@ -214,6 +238,7 @@ class MainActivity : AppCompatActivity() {
         editTaskLand.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) { confirmarTarefaLandscape(); true } else false
         }
+
     }
 
     private fun adicionarTarefa(textoExterno: String? = null) {
