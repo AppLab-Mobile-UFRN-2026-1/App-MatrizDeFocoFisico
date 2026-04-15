@@ -7,15 +7,14 @@ Um aplicativo Android nativo que transforma a Matriz de Eisenhower em uma experi
 
 ## Demonstração
 
-> *(vídeo será adicionado após a gravação)*
+https://github.com/user-attachments/assets/45159328-36ac-4398-a3c3-59f3fdb0dfc4
 
 ---
 
 ## Funcionalidades
 
 ### Interface
-
-- **Grade de quadrantes:** tela dividida em quatro áreas com cores pastel — vermelho (Fazer Agora), verde (Agendar), âmbar (Delegar) e azul (Descartar/Avaliar).
+uatro áreas com cores pastel — vermelho (Fazer Agora), verde (Agendar), âmbar (Delegar) e azul (Descartar/Avaliar).
 - **Bolhas arrastáveis:** cada tarefa é representada por uma bolha quadrada colorida, posicionada automaticamente em uma grade de slots dentro do seu quadrante.
 - **Animação de mola:** ao soltar uma bolha, ela anima até o slot correto com física de mola (`DampingRatioMediumBouncy`). Quando uma tarefa muda de quadrante, as demais se reorganizam com a mesma animação.
 - **Input flutuante:** barra de criação de tarefas com design arredondado na parte inferior da tela, que sobe automaticamente ao abrir o teclado.
