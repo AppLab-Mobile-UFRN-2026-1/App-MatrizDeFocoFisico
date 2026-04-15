@@ -141,26 +141,44 @@
         android:elevation="12dp"
         android:visibility="gone" />
 
-    <!-- Barra de input flutuante -->
-    <LinearLayout
-        android:id="@+id/input_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="24dp"
+    <!-- Botão compacto para landscape (abre a barra de input no topo) -->
+    <Button
+        android:id="@+id/btn_add_fab"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom|end"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/bg_input_bar"
+        android:backgroundTint="#FF5252"
+        android:text="+"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:padding="0dp"
         android:elevation="8dp"
+        android:visibility="gone" />
+
+    <!-- Barra de input para landscape (aparece no topo ao clicar no FAB) -->
+    <LinearLayout
+        android:id="@+id/top_input_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/bg_input_bar"
+        android:elevation="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="8dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="6dp"
+        android:visibility="gone">
 
         <EditText
-            android:id="@+id/edit_task"
+            android:id="@+id/edit_task_land"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="38dp"
             android:layout_weight="1"
             android:background="@null"
             android:hint="Nova tarefa…"
@@ -169,18 +187,76 @@
             android:inputType="textCapSentences"
             android:imeOptions="actionDone"
             android:maxLines="1"
-            android:textSize="15sp"
+            android:singleLine="true"
+            android:textSize="14sp"
+            android:paddingStart="4dp" />
+
+        <Button
+            android:id="@+id/btn_add_land_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_margin="3dp"
+            android:backgroundTint="#FF5252"
+            android:text="Adicionar"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp" />
+
+        <Button
+            android:id="@+id/btn_add_land_cancel"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_margin="3dp"
+            android:text="✕"
+            android:textColor="#9E9E9E"
+            android:textSize="14sp"
+            android:padding="0dp" />
+    </LinearLayout>
+
+    <!-- Barra de input flutuante -->
+    <LinearLayout
+        android:id="@+id/input_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_input_bar"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="6dp">
+
+        <EditText
+            android:id="@+id/edit_task"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="Nova tarefa…"
+            android:textColorHint="#9E9E9E"
+            android:textColor="#212121"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:textSize="14sp"
             android:paddingStart="4dp" />
 
         <Button
             android:id="@+id/btn_add"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="4dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_margin="3dp"
             android:backgroundTint="#FF5252"
             android:text="+"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:padding="0dp" />
     </LinearLayout>

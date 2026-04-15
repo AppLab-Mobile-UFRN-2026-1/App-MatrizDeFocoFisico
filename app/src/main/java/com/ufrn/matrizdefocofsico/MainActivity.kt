@@ -1,6 +1,7 @@
 package com.ufrn.matrizdefocofsico
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
@@ -9,6 +10,8 @@ import android.view.ViewTreeObserver
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -33,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var editTask: EditText
     private lateinit var deleteZone: TextView
     private lateinit var inputBar: LinearLayout
+    private lateinit var btnAddFab: Button
+    private lateinit var topInputBar: LinearLayout
+    private lateinit var editTaskLand: EditText
 
     // ─── Estado ───────────────────────────────────────────────────────────────
     private lateinit var repository: TaskRepository
@@ -42,10 +48,19 @@ class MainActivity : AppCompatActivity() {
     private val quadrantViews = mutableMapOf<Quadrant, View>()
     private val gson = Gson()
 
-    // ─── Tamanho da bolha e limites por quadrante ─────────────────────────────
+    // ─── Tamanho da bolha e grade — adapta conforme orientação ───────────────
+    private val isLandscape: Boolean
+        get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     private val bubbleSizePx: Int
-        get() = (80 * resources.displayMetrics.density).toInt()
-    private val colunasQuadrante = 2
+        get() = if (isLandscape) (60 * resources.displayMetrics.density).toInt()
+                else             (80 * resources.displayMetrics.density).toInt()
+    private val colunasQuadrante: Int
+        get() = if (isLandscape) 4 else 2
+    private val labelReservaDp: Float
+        get() = if (isLandscape) 26f else 40f
+    private val gapDp: Float
+        get() = if (isLandscape) 6f  else 8f
+
     private val limitePorQuadrante = mapOf(
         Quadrant.FAZER_AGORA to 8,
         Quadrant.AGENDAR     to 8,
@@ -67,6 +82,9 @@ class MainActivity : AppCompatActivity() {
         bubbleContainer = findViewById(R.id.bubble_container)
         editTask = findViewById(R.id.edit_task)
         deleteZone = findViewById(R.id.delete_zone)
+        btnAddFab = findViewById(R.id.btn_add_fab)
+        topInputBar = findViewById(R.id.top_input_bar)
+        editTaskLand = findViewById(R.id.edit_task_land)
 
         quadrantViews[Quadrant.FAZER_AGORA] = findViewById(R.id.quadrant_fazer_agora)
         quadrantViews[Quadrant.AGENDAR]     = findViewById(R.id.quadrant_agendar)
@@ -82,7 +100,18 @@ class MainActivity : AppCompatActivity() {
         val navBarResId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
         navBarHeight = if (navBarResId > 0) resources.getDimensionPixelSize(navBarResId) else 0
         inputBar = findViewById(R.id.input_bar)
-        aplicarMargemInputBar(0)
+
+        if (isLandscape) {
+            inputBar.visibility = View.GONE
+            btnAddFab.visibility = View.VISIBLE
+            aplicarMargemFab()
+            aplicarMargemTopInputBar()
+        } else {
+            inputBar.visibility = View.VISIBLE
+            btnAddFab.visibility = View.GONE
+            topInputBar.visibility = View.GONE
+            aplicarMargemInputBar(0)
+        }
 
         configurarInput()
 
@@ -91,7 +120,13 @@ class MainActivity : AppCompatActivity() {
         // Reposiciona o input bar quando o teclado abre/fecha (API moderna, funciona no Android 11+)
         ViewCompat.setOnApplyWindowInsetsListener(root) { _, insets ->
             val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
-            aplicarMargemInputBar(if (imeHeight > 0) imeHeight else 0)
+            if (inputBar.visibility == View.VISIBLE) {
+                aplicarMargemInputBar(if (imeHeight > 0) imeHeight else 0)
+            }
+            // Fecha a barra landscape automaticamente quando o teclado é dispensado
+            if (topInputBar.visibility == View.VISIBLE && imeHeight == 0) {
+                fecharBarraLandscape()
+            }
             insets
         }
 
@@ -99,7 +134,10 @@ class MainActivity : AppCompatActivity() {
         root.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 root.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                tasks.addAll(repository.load())
+                // Se tasks já foi populada por onRestoreInstanceState, não recarrega do repositório
+                if (tasks.isEmpty()) {
+                    tasks.addAll(repository.load())
+                }
                 renderAllBubbles()
             }
         })
@@ -116,6 +154,42 @@ class MainActivity : AppCompatActivity() {
         inputBar.layoutParams = params
     }
 
+    private fun aplicarMargemFab() {
+        val d = resources.displayMetrics.density
+        val params = btnAddFab.layoutParams as FrameLayout.LayoutParams
+        params.bottomMargin = (20 * d).toInt() + navBarHeight
+        btnAddFab.layoutParams = params
+    }
+
+    private fun aplicarMargemTopInputBar() {
+        val d = resources.displayMetrics.density
+        val params = topInputBar.layoutParams as FrameLayout.LayoutParams
+        params.topMargin = statusBarHeight + (8 * d).toInt()
+        topInputBar.layoutParams = params
+    }
+
+    private fun abrirBarraLandscape() {
+        topInputBar.visibility = View.VISIBLE
+        editTaskLand.requestFocus()
+        val imm = getSystemService(InputMethodManager::class.java)
+        imm.showSoftInput(editTaskLand, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun confirmarTarefaLandscape() {
+        val texto = editTaskLand.text.toString().trim()
+        if (texto.isNotBlank()) {
+            adicionarTarefa(textoExterno = texto)
+            fecharBarraLandscape()
+        }
+    }
+
+    private fun fecharBarraLandscape() {
+        topInputBar.visibility = View.GONE
+        editTaskLand.text.clear()
+        val imm = getSystemService(InputMethodManager::class.java)
+        imm.hideSoftInputFromWindow(editTaskLand.windowToken, 0)
+    }
+
     // ─── Input ────────────────────────────────────────────────────────────────
     private fun configurarInput() {
         val btnAdd = findViewById<Button>(R.id.btn_add)
@@ -128,10 +202,22 @@ class MainActivity : AppCompatActivity() {
                 true
             } else false
         }
+
+        btnAddFab.setOnClickListener { abrirBarraLandscape() }
+
+        val btnConfirm = findViewById<Button>(R.id.btn_add_land_confirm)
+        val btnCancel  = findViewById<Button>(R.id.btn_add_land_cancel)
+
+        btnConfirm.setOnClickListener { confirmarTarefaLandscape() }
+        btnCancel.setOnClickListener  { fecharBarraLandscape() }
+
+        editTaskLand.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) { confirmarTarefaLandscape(); true } else false
+        }
     }
 
-    private fun adicionarTarefa() {
-        val texto = editTask.text.toString().trim()
+    private fun adicionarTarefa(textoExterno: String? = null) {
+        val texto = textoExterno ?: editTask.text.toString().trim()
         if (texto.isBlank()) return
 
         val quadranteDestino = ordemOverflow.firstOrNull { q ->
@@ -145,10 +231,11 @@ class MainActivity : AppCompatActivity() {
         val task = Task(text = texto, quadrant = quadranteDestino)
         tasks.add(task)
         repository.save(tasks)
-        editTask.text.clear()
+        if (textoExterno == null) editTask.text.clear()
 
         addBubbleView(task)
     }
+
 
     // ─── Bolhas ───────────────────────────────────────────────────────────────
     private fun renderAllBubbles() {
@@ -161,6 +248,12 @@ class MainActivity : AppCompatActivity() {
         bubble.tag = task.id
         bubble.text = task.text
         bubble.background = criarFundoRetangular(task.quadrant.bubbleColorInt)
+
+        // Sobrescreve o tamanho fixo do XML para adaptar à orientação
+        val size = bubbleSizePx
+        bubble.layoutParams = FrameLayout.LayoutParams(size, size)
+        // Texto menor em landscape para caber nas bolhas menores
+        bubble.textSize = if (isLandscape) 9.5f else 11f
 
         val slotIndex = tasks.filter { it.quadrant == task.quadrant }.indexOfFirst { it.id == task.id }
         val (x, y) = calcularPosicaoSlot(task.quadrant, slotIndex)
@@ -377,8 +470,8 @@ class MainActivity : AppCompatActivity() {
     private fun calcularPosicaoSlot(quadrant: Quadrant, slotIndex: Int): Pair<Float, Float> {
         val bounds = getBoundsOf(quadrantViews[quadrant]!!)
         val d = resources.displayMetrics.density
-        val gap = 8 * d
-        val labelReserva = 40 * d
+        val gap = gapDp * d
+        val labelReserva = labelReservaDp * d
         val col = slotIndex % colunasQuadrante
         val row = slotIndex / colunasQuadrante
         val gridWidth = colunasQuadrante * bubbleSizePx + (colunasQuadrante - 1) * gap
@@ -442,6 +535,7 @@ class MainActivity : AppCompatActivity() {
         val json = savedInstanceState.getString("tasks_json") ?: return
         tasks.clear()
         tasks.addAll(gson.fromJson(json, Array<Task>::class.java).toList())
-        renderAllBubbles()
+        // Não chama renderAllBubbles() aqui — o layout ainda não foi medido.
+        // O GlobalLayoutListener em onCreate detecta que tasks não está vazio e renderiza no momento certo.
     }
 }
